@@ -1,26 +1,4 @@
-OTP reading library
-===================
-.. rheader::
-
-   OTP Info |version|
-
-OTP reading library
--------------------
-
-This module contains functions for reading board information
-(e.g. serial number, MAC address) from the OTP memory of an XCore. 
-This information can be written to the device using the XBURN develop
-tool provider by XMOS.
-
-
-Software version and dependencies
-.................................
-
-This document pertains to version |version| of the OTP reading library. It is
-intended to be used with version 13.x of the xTIMEcomposer studio tools.
-
-The library does not have any dependencies (i.e. it does not rely on any
-other libraries).
+.. include:: ../../../README.rst
 
 API
 ---
@@ -43,3 +21,12 @@ the OTP that has be set via XBURN:
 
 .. doxygenfunction:: otp_board_info_get_mac
 .. doxygenfunction:: otp_board_info_get_serial
+
+|appendix|
+
+Known Issues
+------------
+
+No known issues.
+
+.. include:: ../../../CHANGELOG.rst
