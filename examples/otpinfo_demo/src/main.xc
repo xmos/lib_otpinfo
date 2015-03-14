@@ -1,3 +1,4 @@
+// Copyright (c) 2015, XMOS Ltd, All rights reserved
 #include "otp_board_info.h"
 #include <platform.h>
 #include <stdio.h>
