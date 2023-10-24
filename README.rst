@@ -9,8 +9,8 @@ This module contains functions for reading board information
 This information can be written to the device using the XBURN develop
 tool provider by XMOS.
 
-
 Software version and dependencies
 .................................
 
-.. libdeps::
+The CHANGELOG contains information about the current and previous versions.
+For a list of direct dependencies, look for DEPENDENT_MODULES in lib_otpinfo/module_build_info.
