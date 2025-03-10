@@ -1,19 +1,10 @@
-// Copyright 2014-2021 XMOS LIMITED.
+// Copyright 2014-2025 XMOS LIMITED.
 // This Software is subject to the terms of the XMOS Public Licence: Version 1.
 
 #include "otp_board_info.h"
 #include <xs1.h>
 #include <xclib.h>
-
-/// Size of the OTP in words.
-#define OTP_SIZE 0x800
-
-/// OTP control signals.
-enum {
-  OTP_CTRL_READ = 1 << 0,
-  OTP_CTRL_STATUS = 1 << 5,
-  OTP_CTRL_RESET_M = 1 << 13
-};
+#include <stdio.h>
 
 typedef struct board_info_header_t {
   unsigned address;
@@ -21,38 +12,26 @@ typedef struct board_info_header_t {
 } board_info_header_t;
 
 /// Read a word from the specified address in the OTP.
-static unsigned otp_read_word(otp_ports_t &ports, unsigned address)
+static unsigned otp_read_word(OTPPorts &ports, unsigned address)
 {
   unsigned value;
-  ports.addr <: address;
-
-  // If the application booted from OTP the bootloader may have left
-  // differential mode enabled. Reset the mode registers to default settings.
-  // There is no need to do this on every read - we could do it just once at the
-  // start. However it is good for code size to do this at the same time as the
-  // read from OTP since the ports will be in registers for the OTP read.
-  ports.ctrl <: OTP_CTRL_RESET_M;
-  ports.ctrl <: 0;
-
-  // Start the read command.
-  ports.ctrl <: OTP_CTRL_READ;
-  // Wait for status to go high. Use peek otherwise the value of the control
-  // signals we are driving will become undefined.
-  do {
-    value = peek(ports.ctrl);
-  } while ((value & OTP_CTRL_STATUS) == 0);
-  ports.ctrl <: 0;
-  // Grab the data.
-  ports.data :> value;
-
+#if defined(__XS3A__)
+  otp_read_differential(ports, address, &value, 1);
+#else
+  otp_read(ports, address, &value, 1);
+#endif
   return value;
 }
 
 /// Search the end of the OTP for a valid board info header.
-static int otp_board_info_get_header(otp_ports_t &ports,
+static int otp_board_info_get_header(OTPPorts &ports,
                                      board_info_header_t &info)
 {
-  int address = OTP_SIZE - 1;
+#if defined(__XS3A__)
+  int address = 0x1fa;
+#else
+  int address = (OTP_SIZE) - 1;
+#endif
   do {
     unsigned bitmap = otp_read_word(ports, address);
     unsigned length;
@@ -82,15 +61,19 @@ static unsigned otp_board_info_get_num_macs(const board_info_header_t &info)
   return (info.bitmap >> 22) & 0x7;
 }
 
-int otp_board_info_get_mac(otp_ports_t &ports, unsigned i, char mac[6])
+int otp_board_info_get_mac(OTPPorts &ports, unsigned i, char mac[6])
 {
   unsigned address;
   unsigned macaddr[2];
   board_info_header_t info;
   if (!otp_board_info_get_header(ports, info))
+  {
     return 0;
+  }
   if (i >= otp_board_info_get_num_macs(info))
+  {
     return 0;
+  }
   address = info.address - (2 + 2 * i);
   macaddr[0] = byterev(otp_read_word(ports, address + 1));
   macaddr[1] = byterev(otp_read_word(ports, address));
@@ -106,16 +89,41 @@ static int otp_board_info_has_serial(const board_info_header_t &info)
   return (info.bitmap >> 21) & 1;
 }
 
-int
-otp_board_info_get_serial(otp_ports_t &ports, unsigned &value)
+static int otp_board_info_has_board_identifier(const board_info_header_t &info)
+{
+  return (info.bitmap >> 20) & 1;
+}
+
+int otp_board_info_get_serial(OTPPorts &ports, unsigned &value)
 {
   unsigned address;
   board_info_header_t info;
   if (!otp_board_info_get_header(ports, info))
+  {
     return 0;
+  }
   if (!otp_board_info_has_serial(info))
+  {
     return 0;
+  }
   address = info.address - (otp_board_info_get_num_macs(info) * 2 + 1);
+  value = otp_read_word(ports, address);
+  return 1;
+}
+
+int otp_board_info_get_board_identifier(OTPPorts &ports, unsigned &value)
+{
+  unsigned address;
+  board_info_header_t info;
+  if (!otp_board_info_get_header(ports, info))
+  {
+    return 0;
+  }
+  if (!otp_board_info_has_board_identifier(info))
+  {
+    return 0;
+  }
+  address = info.address - ((otp_board_info_get_num_macs(info) * 2) + otp_board_info_has_serial(info) + 1);
   value = otp_read_word(ports, address);
   return 1;
 }
