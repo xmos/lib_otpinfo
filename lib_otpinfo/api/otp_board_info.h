@@ -1,4 +1,4 @@
-// Copyright 2014-2021 XMOS LIMITED.
+// Copyright 2014-2025 XMOS LIMITED.
 // This Software is subject to the terms of the XMOS Public Licence: Version 1.
 
 /**
@@ -12,30 +12,15 @@
 #ifndef _otp_board_info_h_
 #define _otp_board_info_h_
 
-/**
- * otp_ports_t structure - contains ports used to access the OTP memory.
- */
-typedef struct otp_ports_t {
-  port data;
-#ifdef __XC__
-  out port addr;
-  out port ctrl;
+#if defined(__XS2A__)
+#include <otp.h>
+#elif defined(__XS3A__)
+#include <otp3.h>
 #else
-  port addr;
-  port ctrl;
+#error "otp_board_info.xc Unsupported architecture. XS2A and XS3A supported"
 #endif
-} otp_ports_t;
 
-/**
- * Standard initializer for an otp_ports_t structure. Use as follows:
- * on tile[0]: otp_ports_t otp_ports = OTP_PORTS_INITIALIZER;
- */
-#define OTP_PORTS_INITIALIZER \
-{ \
-  XS1_PORT_32B, \
-  XS1_PORT_16C, \
-  XS1_PORT_16D \
-}
+#define otp_ports_t OTPPorts // To maintain backwards compatibility
 
 /**
  * Read a MAC address from the board information written at the end of the OTP
@@ -43,9 +28,9 @@ typedef struct otp_ports_t {
  * \param ports Ports used to access the OTP memory.
  * \param index Index of the MAC address to retrieve.
  * \param mac Array to write the MAC address to.
- * \return Returns 1 on success, 0 on failure.
+ * \return Returns 1 on finding a mac address at index 'index', 0 if no mac address present
  */
-int otp_board_info_get_mac(REFERENCE_PARAM(otp_ports_t, ports), unsigned index,
+int otp_board_info_get_mac(REFERENCE_PARAM(OTPPorts, ports), unsigned index,
                            char mac[6]);
 
 /**
@@ -53,9 +38,20 @@ int otp_board_info_get_mac(REFERENCE_PARAM(otp_ports_t, ports), unsigned index,
  * memory.
  * \param ports Ports used to access the OTP memory.
  * \param value Variable to store the serial number to.
- * \return Returns 1 on success, 0 on failure.
+ * \return Returns 1 if serial number present in the OTP memory, 0 if no serial number found.
  */
-int otp_board_info_get_serial(REFERENCE_PARAM(otp_ports_t, ports),
+int otp_board_info_get_serial(REFERENCE_PARAM(OTPPorts, ports),
                               REFERENCE_PARAM(unsigned, value));
 
+/**
+ * Read the board identifier from the board information written at the end of the OTP
+ * memory.
+ * \param ports Ports used to access the OTP memory.
+ * \param value Variable to store the board identifier to.
+ * \return Returns 1 if bitmap present in the OTP memory, 0 if no serial number found.
+ */
+int otp_board_info_get_board_identifier(REFERENCE_PARAM(OTPPorts, ports),
+                                        REFERENCE_PARAM(unsigned, value));
+
 #endif /* _otp_board_info_h_ */
+

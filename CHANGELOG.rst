@@ -1,5 +1,13 @@
-OTP reading library change log
-==============================
+lib_otpinfo change log
+======================
+
+2.2.0
+-----
+
+  * ADDED: Support for xs3 architecture
+  * CHANGED: Use the XTC tools otp library for reading from the OTP memory
+  * ADDED: otp_board_info_get_board_identifier() API for reading the board
+    identifier
 
 2.1.0
 -----
