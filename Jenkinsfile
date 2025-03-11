@@ -2,6 +2,12 @@
 
 @Library('xmos_jenkins_shared_library@v0.38.0') _
 
+def archiveLib(String repoName) {
+    sh "git -C ${repoName} clean -xdf"
+    sh "zip ${repoName}_sw.zip -r ${repoName}"
+    archiveArtifacts artifacts: "${repoName}_sw.zip", allowEmptyArchive: false
+}
+
 getApproval()
 
 pipeline {
@@ -77,6 +83,12 @@ pipeline {
             }
           }
         }
+
+        stage("Archive Lib") {
+          steps {
+            archiveLib(REPO)
+          }
+        } //stage("Archive Lib")
       } // stages
       post {
         cleanup {
