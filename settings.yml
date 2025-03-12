@@ -3,7 +3,7 @@
 lib_name: lib_otpinfo
 project: '{{lib_name}}'
 title: '{{lib_name}}: OTP reading library'
-version: 2.2.0
+version: 2.2.1
 
 documentation:
   exclude_patterns_path: doc/exclude_patterns.inc

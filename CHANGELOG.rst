@@ -1,6 +1,12 @@
 lib_otpinfo change log
 ======================
 
+2.2.1
+-----
+
+  * ADDED: Support for compiling with legacy XCOMMON build system for xs2
+    architecture
+
 2.2.0
 -----
 
