@@ -5,7 +5,7 @@ lib_otpinfo: OTP reading library
 ################################
 
 :vendor: XMOS
-:version: 2.2.0
+:version: 2.2.1
 :scope: General Use
 :description: OTP reading library
 :category: General Purpose
@@ -31,7 +31,7 @@ Features
 Known issues
 ************
 
-  * None
+  * Compiling using legacy `XCOMMON build system <https://www.xmos.com/documentation/XM-014363-PC/html/tools-guide/tools-ref/xcommon/index.html>`_ only supported for XS2 architecture (`xcore-200` series)
 
 ****************
 Development repo
