@@ -1,13 +1,13 @@
 :orphan:
 
-################################
-lib_otpinfo: OTP reading library
-################################
+########################################
+lib_otpinfo: OTP based board information
+########################################
 
 :vendor: XMOS
 :version: 2.2.1
 :scope: General Use
-:description: OTP reading library
+:description: Functions for reading board information (e.g. serial number) from OTP memory
 :category: General Purpose
 :keywords: OTP
 :devices: xcore.ai, xcore-200
@@ -31,31 +31,31 @@ Features
 Known issues
 ************
 
-  * Compiling using legacy `XCOMMON build system <https://www.xmos.com/documentation/XM-014363-PC/html/tools-guide/tools-ref/xcommon/index.html>`_ only supported for XS2 architecture (`xcore-200` series)
+* Compiling using legacy `XCOMMON build system <https://www.xmos.com/documentation/XM-014363-PC/html/tools-guide/tools-ref/xcommon/index.html>`_ only supported for XS2 architecture (`xcore-200` series)
 
 ****************
 Development repo
 ****************
 
-  * `lib_otpinfo <https://github.com/xmos/lib_otpinfo>`_
+* `lib_otpinfo <https://github.com/xmos/lib_otpinfo>`_
 
 **************
 Required tools
 **************
 
-  * XMOS XTC Tools: 15.3.1
+* XMOS XTC Tools: 15.3.1
 
 *********************************
 Required libraries (dependencies)
 *********************************
 
-  * None
+* None
 
 *************************
 Related application notes
 *************************
 
-  * None
+* None
 
 *******
 Support

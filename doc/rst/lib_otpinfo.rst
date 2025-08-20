@@ -1,7 +1,7 @@
 
-################################
-lib_otpinfo: OTP reading library
-################################
+########################################
+lib_otpinfo: OTP based board information
+########################################
 
 ************
 Introduction
@@ -116,7 +116,6 @@ Where ``OTP_PORTS_INITIALIZER`` is the standard initialiser for the ``OTPPorts``
 ***
 API
 ***
-
 
 The following functions can then be used to obtain information from
 the OTP that has been set via XBURN:

@@ -1,7 +1,7 @@
 # This file provides overrides to the Doxyfile configuration
 
 PROJECT_NAME           = lib_otpinfo
-PROJECT_BRIEF          = "OTP reading library"
+PROJECT_BRIEF          = "OTP based board information"
 
 INPUT                  = ../lib_otpinfo/api
 
